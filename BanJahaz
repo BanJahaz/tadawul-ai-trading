@@ -1,0 +1,66 @@
+cd /your/project/path
+git init
+git add .
+git commit -m "Initial upload"
+git push origin main
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Saudi Tadawul Market Data</title>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+</head>
+<body>
+    <h2>Saudi Tadawul Market Data (Live)</h2>
+    <div id="market-data">Loading data...</div>
+
+    <script>
+        async function fetchMarketData() {
+            try {
+                const response = await axios.get('https://query1.finance.yahoo.com/v7/finance/quote?symbols=^TASI');
+                const data = response.data.quoteResponse.result[0];
+
+                document.getElementById("market-data").innerHTML = `
+                    <p><strong>Index:</strong> ${data.shortName} (${data.symbol})</p>
+                    <p><strong>Current Price:</strong> ${data.regularMarketPrice} SAR</p>
+                    <p><strong>Change:</strong> ${data.regularMarketChange} (${data.regularMarketChangePercent}%)</p>
+                `;
+            } catch (error) {
+                document.getElementById("market-data").innerHTML = "<p>Error loading data.</p>";
+                console.error("Error fetching market data:", error);
+            }
+        }
+
+        fetchMarketData();
+    </script>
+</body>
+</html>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<canvas id="tadawulChart"></canvas>
+
+<script>
+    async function fetchAndDisplayChart() {
+        try {
+            const response = await axios.get('https://api.example.com/tadawul-historical'); // Replace with a real API
+            const data = response.data;
+
+            new Chart(document.getElementById("tadawulChart"), {
+                type: 'line',
+                data: {
+                    labels: data.dates, // X-axis: Dates
+                    datasets: [{
+                        label: "TASI Index",
+                        data: data.prices, // Y-axis: Prices
+                        borderColor: "#00e676",
+                        fill: false
+                    }]
+                }
+            });
+        } catch (error) {
+            console.error("Error fetching chart data:", error);
+        }
+    }
+
+    fetchAndDisplayChart();
+</script>
